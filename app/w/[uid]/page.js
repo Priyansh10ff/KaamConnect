@@ -61,10 +61,30 @@ export default function PublicProfile() {
       // 2. Fetch jobs sub-collection
       const jobsRef = collection(db, 'workers', uid, 'jobs');
       const jobsSnap = await getDocs(jobsRef);
-      const jobsList = jobsSnap.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      
+      // Filter out duplicate reviews based on clientId and timestamp
+      const seenReviews = new Set();
+      const jobsList = jobsSnap.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .filter(job => {
+          // Create a unique key for each review using clientId and timestamp
+          const reviewKey = `${job.clientId}-${job.timestamp?.seconds || Date.now()}`;
+          if (seenReviews.has(reviewKey)) {
+            return false; // Skip duplicate
+          }
+          seenReviews.add(reviewKey);
+          return true;
+        })
+        // Sort by timestamp, newest first
+        .sort((a, b) => {
+          const timeA = a.timestamp?.seconds || 0;
+          const timeB = b.timestamp?.seconds || 0;
+          return timeB - timeA;
+        });
+        
       setJobs(jobsList);
 
     } catch (err) {
@@ -115,12 +135,8 @@ export default function PublicProfile() {
       setReviewText('');
       setRating(5);
 
-      // Refresh reviews list
-      const reviewsSnap = await getDocs(collection(db, 'workers', uid, 'jobs'));
-      setJobs(reviewsSnap.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })));
+      // Refresh the data to show the new review
+      await fetchData();
 
     } catch (err) {
       console.error('Submit review error:', err);
@@ -144,74 +160,7 @@ export default function PublicProfile() {
     return <div className="flex min-h-screen items-center justify-center"><p>Worker not found.</p></div>;
   }
 
-  // This is the conditional component for the Review Form
-  const ReviewForm = () => {
-    if (authLoading) {
-      return <div className="text-center p-4"><p>Loading review form...</p></div>
-    }
-    
-  if (clientUser) {
-      // Client is logged in, show the form
-      return (
-        <form onSubmit={handleSubmitReview}>
-            <div className="mb-4">
-            <label htmlFor="rating" className="form-label">Rating (1-5 Stars)</label>
-            <select id="rating" value={rating} onChange={(e) => setRating(e.target.value)} className="form-input">
-              <option value={5}>⭐⭐⭐⭐⭐ 5 Stars</option>
-              <option value={4}>⭐⭐⭐⭐ 4 Stars</option>
-              <option value={3}>⭐⭐⭐ 3 Stars</option>
-              <option value={2}>⭐⭐ 2 Stars</option>
-              <option value={1}>⭐ 1 Star</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="review" className="form-label">Review (Optional)</label>
-            <textarea 
-              id="review" 
-              rows={3} 
-              value={review} 
-              onChange={(e) => {
-                e.preventDefault();
-                setReview(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                e.stopPropagation();
-              }}
-              placeholder="e.g., Sunil did a great job..." 
-              className="form-input form-textarea w-full"
-            />
-          </div>
-          {formError && <p className="text-red-500 text-sm mb-2">{formError}</p>}
-          {formSuccess && <p className="text-green-600 text-sm mb-2">{formSuccess}</p>}
-          <button 
-            type="submit" 
-            disabled={formLoading} 
-            className="btn btn-primary w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {formLoading ? 'Submitting...' : 'Submit Review'}
-          </button>
-          <p className="text-xs muted text-center mt-2">Logged in as {clientUser.email}</p>
-        </form>
-      );
-    }
-
-    // Client is NOT logged in, show login links
-    return (
-      <div className="text-center">
-        <p className="font-semibold text-lg mb-4">Want to leave a review?</p>
-        <p className="mb-4">Please log in or sign up as a client to share your feedback.</p>
-        <div style={{display:'flex', gap:'0.75rem'}}>
-          <a href="/client-login" className="btn btn-primary" style={{flex:1, textAlign:'center'}}>
-            Client Login
-          </a>
-          <a href="/client-signup" className="btn btn-ghost" style={{flex:1, textAlign:'center'}}>
-            Client Sign Up
-          </a>
-        </div>
-      </div>
-    );
-  }
+  // Removed duplicate ReviewForm component as we have the form logic in the main render
 
   return (
     <main className="min-h-screen p-8">
@@ -343,7 +292,7 @@ export default function PublicProfile() {
                   <p className="text-gray-700 mt-2">"{job.review}"</p>
                   {/* This is the new line you just added */}
                   <p className="text-sm text-gray-600 mt-2 font-medium">
-                    - {job.clientName}
+                    - {job.clientEmail}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
                     {job.timestamp ? new Date(job.timestamp.seconds * 1000).toLocaleDateString() : 'Just now'}
