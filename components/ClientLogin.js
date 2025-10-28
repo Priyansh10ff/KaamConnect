@@ -74,6 +74,16 @@ export default function ClientLogin() {
       <p className="text-center muted mt-4">
         New client? <a href="/client-signup" className="text-indigo-600 font-semibold">Sign up</a>
       </p>
+
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <p className="text-center font-medium mb-4">Are you a worker looking for jobs?</p>
+        <a 
+          href="/login"
+          className="btn btn-ghost w-full text-center"
+        >
+          Go to Worker Login
+        </a>
+      </div>
     </div>
   );
 }

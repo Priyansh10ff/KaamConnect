@@ -1,5 +1,5 @@
 // app/client-signup/page.js
-import ClientSignup from '../../components/ClientSignup'; // Import the new component
+import ClientSignup from '../../components/ClientSignup';
 
 export default function ClientSignupPage() {
   return (
