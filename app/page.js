@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../lib/firebase';
+import HomeLanding from '../components/HomeLanding';
 
-export default function Home() {
+export default function RootPage() {
   const router = useRouter();
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -13,28 +15,32 @@ export default function Home() {
         // Check if user is a client based on claims
         user.getIdTokenResult().then((idTokenResult) => {
           if (idTokenResult.claims.type === 'client') {
-            router.push('/search'); // Clients go to search page
+            router.replace('/search'); // Clients go to search page
           } else {
-            router.push('/dashboard'); // Workers go to dashboard
+            router.replace('/dashboard'); // Workers go to dashboard
           }
         }).catch(() => {
           // If we can't check claims, default to dashboard
-          router.push('/dashboard');
+          router.replace('/dashboard');
         });
       } else {
-        // No user is signed in, redirect to login
-        router.push('/login');
+        // No user is signed in — show the public home landing
+        setChecking(false);
       }
     });
 
     return () => unsubscribe();
   }, [router]);
 
-  // Show nicer loading spinner while checking auth
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mb-4"></div>
-      <p className="text-gray-600">Loading your workspace...</p>
-    </div>
-  );
+  if (checking) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mb-4"></div>
+        <p className="text-gray-600">Loading your workspace...</p>
+      </div>
+    );
+  }
+
+  // Unauthenticated users see the landing
+  return <HomeLanding />;
 }

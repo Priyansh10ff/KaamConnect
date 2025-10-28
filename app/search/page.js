@@ -1,6 +1,7 @@
 // app/search/page.js
-'use client';
+"use client";
 import { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { auth, db } from '../../lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, getDocs } from 'firebase/firestore';
@@ -8,6 +9,7 @@ import { collection, getDocs } from 'firebase/firestore';
 export default function SearchPage() {
   const [clientUser, setClientUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
   
   const [allWorkers, setAllWorkers] = useState([]);
   const [fetchError, setFetchError] = useState('');
@@ -49,11 +51,11 @@ export default function SearchPage() {
         
       } else {
         // User is signed out, redirect to client login
-        window.location.href = '/client-login';
+        router.replace('/client-login');
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   // 3. Filter the workers based on search state
   const filteredWorkers = useMemo(() => {

@@ -1,6 +1,7 @@
 // app/dashboard/page.js
-'use client';
+"use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { auth, db } from '../../lib/firebase'; // Get auth and client-side db
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -9,6 +10,7 @@ export default function Dashboard() {
   const [worker, setWorker] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     // Listen for auth changes
@@ -32,14 +34,14 @@ export default function Dashboard() {
         }
       } else {
         // User is signed out, redirect to login
-        window.location.href = '/login';
+        router.replace('/login');
       }
       setLoading(false);
     });
 
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleLogout = async () => {
     try {
