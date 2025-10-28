@@ -1,29 +1,69 @@
-// app/w/[uid]/page.js
-'use client';
-import { useState, useEffect } from 'react';
-import { db, auth } from '../../../lib/firebase'; // <--- IMPORT 'auth'
-import { onAuthStateChanged } from 'firebase/auth'; // <--- IMPORT AUTH LISTENER
-import { doc, getDoc, collection, getDocs, Timestamp } from 'firebase/firestore';
-import { useParams } from 'next/navigation';
+import { auth as adminAuth } from '../../../../lib/firebaseAdmin';
+import { db } from '../../../../lib/firebase';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { NextResponse } from 'next/server';
 
-export default function PublicProfile() {
-  const params = useParams();
-  const uid = params.uid;
+export async function POST(req) {
+  try {
+    // Get the authorization header
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'No token provided' }, { status: 401 });
+    }
 
-  const [worker, setWorker] = useState(null);
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+    // Get the token
+    const token = authHeader.split('Bearer ')[1];
+    
+    // Verify token and get user data
+    const decodedToken = await adminAuth.verifyIdToken(token);
+    
+    // Get request body
+    const data = await req.json();
+    const { workerId, rating, review } = data;
 
-  // State for the logged-in client
-  const [clientUser, setClientUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
+    // Get user claims and email
+    const userRecord = await adminAuth.getUser(decodedToken.uid);
+    const customClaims = userRecord.customClaims || {};
+    const email = userRecord.email;
+    
+    // For now, let's consider any authenticated user as a client
+    // Later we can add proper role-based checks using custom claims
+    const jobRef = collection(db, 'workers', workerId, 'jobs');
+    await addDoc(jobRef, {
+      clientId: decodedToken.uid,
+      clientEmail: email,
+      rating,
+      review,
+      timestamp: Timestamp.now()
+    });
 
-  const [rating, setRating] = useState(5);
-  const [review, setReview] = useState('');
-  const [formLoading, setFormLoading] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [formSuccess, setFormSuccess] = useState('');
+    if (!workerId) {
+      return NextResponse.json({ error: 'Worker ID is required' }, { status: 400 });
+    }
+
+    if (!rating || rating < 1 || rating > 5) {
+      return NextResponse.json({ error: 'Rating must be between 1 and 5' }, { status: 400 });
+    }
+
+    // Create the review document in the jobs subcollection
+    const jobsRef = collection(db, 'workers', workerId, 'jobs');
+    await addDoc(jobsRef, {
+      clientId: decodedToken.uid,
+      clientEmail: decodedToken.email,
+      rating: Number(rating),
+      review: review || '',
+      createdAt: Timestamp.now()
+    });
+
+    return NextResponse.json({ success: true });
+
+  } catch (error) {
+    console.error('Review submission error:', error);
+    return NextResponse.json(
+      { error: 'Failed to submit review' },
+      { status: 500 }
+    );
+  }
 
   // Effect to check for logged-in client
   useEffect(() => {

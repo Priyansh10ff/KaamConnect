@@ -10,20 +10,20 @@ export default function PublicProfile() {
   const params = useParams();
   const uid = params.uid;
 
+  // Core data state
   const [worker, setWorker] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  // State for the logged-in client
-  const [clientUser, setClientUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
+  // Review form state
+  const [clientUser, setClientUser] = useState(null);
   const [rating, setRating] = useState(5);
-  const [review, setReview] = useState('');
-  const [formLoading, setFormLoading] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [formSuccess, setFormSuccess] = useState('');
+  const [reviewText, setReviewText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState('');
 
   // Effect to check for logged-in client
   useEffect(() => {
@@ -78,52 +78,56 @@ export default function PublicProfile() {
     fetchData();
   }, [uid]);
 
-  // Handle the review form submission
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-    
-    // Check if client is logged in before submitting
     if (!clientUser) {
-      setFormError('You must be logged in as a client to leave a review.');
+      setSubmitError('You must be logged in as a client to leave a review.');
       return;
     }
 
-    setFormLoading(true);
-    setFormError('');
-    setFormSuccess('');
-
+    setIsSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess('');
+    
     try {
-      // Get the client's auth token
       const token = await clientUser.getIdToken();
-
-      const res = await fetch('/api/jobs/create', {
+      
+      const response = await fetch('/api/jobs/create', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Send the client's token
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          workerId: uid, 
+          workerId: uid,
           rating: Number(rating),
-          review: review,
+          review: reviewText
         })
       });
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || 'Failed to submit review.');
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to submit review');
       }
 
-      setFormSuccess('Thank you! Your review has been submitted.');
-      setReview('');
+      // Success handling
+      setSubmitSuccess('Thank you! Your review has been posted successfully.');
+      setReviewText('');
       setRating(5);
-      fetchData(); // Refresh the data to show the new review
+
+      // Refresh reviews list
+      const reviewsSnap = await getDocs(collection(db, 'workers', uid, 'jobs'));
+      setJobs(reviewsSnap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })));
 
     } catch (err) {
-      setFormError(err.message);
-      console.error(err);
+      console.error('Submit review error:', err);
+      setSubmitError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
-    setFormLoading(false);
   };
 
   // --- Render States ---
@@ -162,11 +166,29 @@ export default function PublicProfile() {
           </div>
           <div className="mb-4">
             <label htmlFor="review" className="form-label">Review (Optional)</label>
-            <textarea id="review" rows={3} value={review} onChange={(e) => setReview(e.target.value)} placeholder="e.g., Sunil did a great job..." className="form-input form-textarea" />
+            <textarea 
+              id="review" 
+              rows={3} 
+              value={review} 
+              onChange={(e) => {
+                e.preventDefault();
+                setReview(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+              }}
+              placeholder="e.g., Sunil did a great job..." 
+              className="form-input form-textarea w-full"
+            />
           </div>
           {formError && <p className="text-red-500 text-sm mb-2">{formError}</p>}
           {formSuccess && <p className="text-green-600 text-sm mb-2">{formSuccess}</p>}
-          <button type="submit" disabled={formLoading} className="btn btn-primary w-full">
+          <button 
+            type="submit" 
+            disabled={formLoading} 
+            className="btn btn-primary w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
             {formLoading ? 'Submitting...' : 'Submit Review'}
           </button>
           <p className="text-xs muted text-center mt-2">Logged in as {clientUser.email}</p>
@@ -198,7 +220,14 @@ export default function PublicProfile() {
           <a href="/" className="brand">KaamConnect</a>
           <nav className="site-nav">
             <a href="/search">Search</a>
-            <a href="/client-login">Client Login</a>
+            {!clientUser ? (
+              <>
+                <a href="/client-login">Client Login</a>
+                <a href="/client-signup">Client Signup</a>
+              </>
+            ) : (
+              <span className="text-gray-600">Welcome, {clientUser.email}</span>
+            )}
           </nav>
         </div>
       </header>
@@ -219,13 +248,87 @@ export default function PublicProfile() {
           </div>
         </div>
 
-        {/* New Review Form (Now conditional) */}
-        <div className="bg-blue-50 p-6 rounded-lg mb-10 border border-blue-200">
-          <h2 className="text-2xl font-semibold mb-4 text-center">Leave a Review</h2>
-          <ReviewForm /> {/* <--- Use the new conditional component */}
+        {/* Review Form Section */}
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+          <h2 className="text-2xl font-semibold mb-6">Share Your Feedback</h2>
+          
+          {!clientUser ? (
+            // Not logged in state
+            <div className="text-center py-4">
+              <p className="text-gray-600 mb-6">Please log in or sign up as a client to leave a review</p>
+              <div className="flex gap-4">
+                <a href="/client-login" className="flex-1">
+                  <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
+                    Client Login
+                  </button>
+                </a>
+                <a href="/client-signup" className="flex-1">
+                  <button className="w-full border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors">
+                    Client Sign Up
+                  </button>
+                </a>
+              </div>
+            </div>
+          ) : submitSuccess ? (
+            // Success state
+            <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-md">
+              {submitSuccess}
+            </div>
+          ) : (
+            // Review form
+            <form onSubmit={handleSubmitReview} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Rating
+                </label>
+                <select
+                  value={rating}
+                  onChange={e => setRating(e.target.value)}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
+                  <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                  <option value="4">⭐⭐⭐⭐ Very Good</option>
+                  <option value="3">⭐⭐⭐ Good</option>
+                  <option value="2">⭐⭐ Fair</option>
+                  <option value="1">⭐ Needs Improvement</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Review
+                </label>
+                <textarea
+                  value={reviewText}
+                  onChange={e => setReviewText(e.target.value)}
+                  rows="4"
+                  placeholder="Share details about your experience working with this professional..."
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 resize-none"
+                />
+              </div>
+
+              {submitError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
+                  {submitError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-colors"
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Review'}
+              </button>
+
+              <p className="text-sm text-gray-500 text-center">
+                Posting as {clientUser.email}
+              </p>
+            </form>
+          )}
         </div>
 
-        {/* Past Reviews (With Client Name) */}
+        {/* Reviews List */}
         <div>
           <h2 className="text-2xl font-semibold mb-6">Verified Jobs & Reviews</h2>
           {jobs.length === 0 ? (
