@@ -146,13 +146,13 @@ export default function PublicProfile() {
       return <div className="text-center p-4"><p>Loading review form...</p></div>
     }
     
-    if (clientUser) {
+  if (clientUser) {
       // Client is logged in, show the form
       return (
         <form onSubmit={handleSubmitReview}>
-          <div className="mb-4">
-            <label htmlFor="rating" className="block text-sm font-medium text-gray-700">Rating (1-5 Stars)</label>
-            <select id="rating" value={rating} onChange={(e) => setRating(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+            <div className="mb-4">
+            <label htmlFor="rating" className="form-label">Rating (1-5 Stars)</label>
+            <select id="rating" value={rating} onChange={(e) => setRating(e.target.value)} className="form-input">
               <option value={5}>⭐⭐⭐⭐⭐ 5 Stars</option>
               <option value={4}>⭐⭐⭐⭐ 4 Stars</option>
               <option value={3}>⭐⭐⭐ 3 Stars</option>
@@ -161,15 +161,15 @@ export default function PublicProfile() {
             </select>
           </div>
           <div className="mb-4">
-            <label htmlFor="review" className="block text-sm font-medium text-gray-700">Review (Optional)</label>
-            <textarea id="review" rows={3} value={review} onChange={(e) => setReview(e.target.value)} placeholder="e.g., Sunil did a great job..." className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
+            <label htmlFor="review" className="form-label">Review (Optional)</label>
+            <textarea id="review" rows={3} value={review} onChange={(e) => setReview(e.target.value)} placeholder="e.g., Sunil did a great job..." className="form-input form-textarea" />
           </div>
           {formError && <p className="text-red-500 text-sm mb-2">{formError}</p>}
           {formSuccess && <p className="text-green-600 text-sm mb-2">{formSuccess}</p>}
-          <button type="submit" disabled={formLoading} className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:bg-gray-400">
+          <button type="submit" disabled={formLoading} className="btn btn-primary w-full">
             {formLoading ? 'Submitting...' : 'Submit Review'}
           </button>
-          <p className="text-xs text-center text-gray-500 mt-2">Logged in as {clientUser.email}</p>
+          <p className="text-xs muted text-center mt-2">Logged in as {clientUser.email}</p>
         </form>
       );
     }
@@ -179,11 +179,11 @@ export default function PublicProfile() {
       <div className="text-center">
         <p className="font-semibold text-lg mb-4">Want to leave a review?</p>
         <p className="mb-4">Please log in or sign up as a client to share your feedback.</p>
-        <div className="flex gap-4">
-          <a href="/client-login" className="flex-1 py-3 px-4 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 text-center">
+        <div style={{display:'flex', gap:'0.75rem'}}>
+          <a href="/client-login" className="btn btn-primary" style={{flex:1, textAlign:'center'}}>
             Client Login
           </a>
-          <a href="/client-signup" className="flex-1 py-3 px-4 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300 text-center">
+          <a href="/client-signup" className="btn btn-ghost" style={{flex:1, textAlign:'center'}}>
             Client Sign Up
           </a>
         </div>
@@ -192,8 +192,19 @@ export default function PublicProfile() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50">
-      <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow-md">
+    <main className="min-h-screen p-8">
+      <header className="site-header">
+        <div className="page-wrapper" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <a href="/" className="brand">KaamConnect</a>
+          <nav className="site-nav">
+            <a href="/search">Search</a>
+            <a href="/client-login">Client Login</a>
+          </nav>
+        </div>
+      </header>
+
+      <div className="page-wrapper">
+        <div className="card card-lg w-full max-w-3xl mx-auto">
         
         {/* Worker Info (Unchanged) */}
         <div className="text-center mb-8">
@@ -240,6 +251,7 @@ export default function PublicProfile() {
           )}
         </div>
 
+        </div>
       </div>
     </main>
   );

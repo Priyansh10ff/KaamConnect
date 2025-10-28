@@ -27,45 +27,50 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+    <div className="card max-w-md mx-auto">
       <form onSubmit={handleLogin}>
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold">Sign in to your account</h2>
+          <p className="muted mt-1">Access your worker dashboard and settings</p>
+        </div>
+
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <div className="form-row">
+          <label htmlFor="email" className="form-label">Email</label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
 
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+        <div className="form-row">
+          <label htmlFor="password" className="form-label">Password</label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+          className="btn btn-primary w-full"
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      <p className="text-center text-sm text-gray-600 mt-4">
-        No account? <a href="/signup" className="text-blue-600 hover:underline">Sign up</a>
+
+      <p className="text-center muted mt-4">
+        No account? <a href="/signup" className="text-indigo-600 font-semibold">Sign up</a>
       </p>
     </div>
   );

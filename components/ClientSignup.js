@@ -58,15 +58,18 @@ export default function ClientSignup() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+    <div className="card max-w-md mx-auto">
       <form onSubmit={handleSignup}>
-        <h2 className="text-2xl font-bold mb-6 text-center">Create Client Account</h2>
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold">Create Client Account</h2>
+          <p className="muted mt-1">Create an account to hire trusted workers nearby</p>
+        </div>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {success && <p className="text-green-600 mb-4">{success}</p>}
 
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Your Name</label>
+        <div className="form-row">
+          <label htmlFor="name" className="form-label">Your Name</label>
           <input
             type="text"
             id="name"
@@ -74,12 +77,12 @@ export default function ClientSignup() {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Priya Sharma"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            className="form-input"
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <div className="form-row">
+          <label htmlFor="email" className="form-label">Email</label>
           <input
             type="email"
             id="email"
@@ -87,12 +90,12 @@ export default function ClientSignup() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="e.g., priya@gmail.com"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            className="form-input"
           />
         </div>
 
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+        <div className="form-row">
+          <label htmlFor="password" className="form-label">Password</label>
           <input
             type="password"
             id="password"
@@ -100,23 +103,24 @@ export default function ClientSignup() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="At least 6 characters"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            className="form-input"
           />
         </div>
 
         <button 
           type="submit" 
           disabled={loading}
-          className="w-full py-2 px-4 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+          className="btn btn-primary w-full"
         >
           {loading ? 'Creating Account...' : 'Sign Up as Client'}
         </button>
       </form>
-      <p className="text-center text-sm text-gray-600 mt-4">
-        Already a client? <a href="/client-login" className="text-purple-600 hover:underline">Login</a>
+
+      <p className="text-center muted mt-4">
+        Already a client? <a href="/client-login" className="text-indigo-600 font-semibold">Login</a>
       </p>
-      <p className="text-center text-sm text-gray-600 mt-2">
-        Are you a worker? <a href="/signup" className="text-blue-600 hover:underline">Sign up here</a>
+      <p className="text-center muted mt-2">
+        Are you a worker? <a href="/signup" className="text-indigo-600 font-semibold">Sign up here</a>
       </p>
     </div>
   );

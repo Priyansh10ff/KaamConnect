@@ -74,23 +74,24 @@ export default function SearchPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Find a Worker</h1>
-          <button
-            onClick={handleLogout}
-            className="py-2 px-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700"
-          >
-            Logout
-          </button>
-        </div>
-        <p className="mb-6 text-gray-600">You are logged in as: {clientUser?.email}</p>
+    <main className="min-h-screen p-8">
+      <div className="page-wrapper">
+
+        <header className="site-header" style={{padding:0, marginBottom:'1rem'}}>
+          <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+            <div>
+              <h1 className="text-3xl font-bold">Find a Worker</h1>
+              <p className="muted">You are logged in as: {clientUser?.email}</p>
+            </div>
+            <div>
+              <a href="/" className="muted">Home</a>
+              <button onClick={handleLogout} className="btn btn-danger" style={{marginLeft:'10px'}}>Logout</button>
+            </div>
+          </div>
+        </header>
 
         {/* Search Bars */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 p-6 bg-white rounded-lg shadow">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 p-6 card">
           <div>
             <label htmlFor="searchTrade" className="block text-sm font-medium text-gray-700">Filter by Trade</label>
             <input
@@ -99,7 +100,7 @@ export default function SearchPage() {
               value={searchTrade}
               onChange={(e) => setSearchTrade(e.target.value)}
               placeholder="e.g., Electrician, Carpenter"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              className="form-input"
             />
           </div>
           <div>
@@ -110,41 +111,40 @@ export default function SearchPage() {
               value={searchLocation}
               onChange={(e) => setSearchLocation(e.target.value)}
               placeholder="e.g., Delhi, 110034"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              className="form-input"
             />
           </div>
         </div>
-
         {/* Worker List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {fetchError && <p className="text-red-500">{fetchError}</p>}
-          
+
           {filteredWorkers.length === 0 && !fetchError && (
-            <p className="text-gray-500">No workers match your search.</p>
+            <p className="muted">No workers match your search.</p>
           )}
 
           {filteredWorkers.map(worker => (
-            <div key={worker.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <div key={worker.id} className="card">
               <h2 className="text-2xl font-bold">{worker.name}</h2>
-              <p className="text-lg text-gray-700 mb-2">{worker.trade}</p>
-              <p className="text-sm text-gray-500 mb-4">{worker.location}</p>
-              
+              <p className="text-lg muted mb-2">{worker.trade}</p>
+              <p className="muted mb-4">{worker.location}</p>
+
               <div className="mb-4">
-                <span className="text-xl font-bold text-blue-600">
+                <span className="text-xl font-bold" style={{color:'var(--primary)'}}>
                   {(worker.trustScore || 0).toFixed(1)}
                 </span>
-                <span className="text-gray-500"> Trust Score</span>
+                <span className="muted"> Trust Score</span>
               </div>
-              
-              <a 
+
+              <a
                 href={`/w/${worker.id}`}
-                target="_blank" // Open in new tab
+                target="_blank"
                 rel="noopener noreferrer"
-                className="w-full text-center inline-block py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+                className="btn btn-primary"
+                style={{display:'inline-block'}}
               >
                 View Profile & Reviews
               </a>
-              {/* The "Book Now" button would go here */}
             </div>
           ))}
         </div>

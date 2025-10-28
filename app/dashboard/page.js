@@ -70,48 +70,56 @@ export default function Dashboard() {
   }
 
   // Show dashboard
-  if (worker) {
+    if (worker) {
     return (
-      <main className="flex min-h-screen flex-col items-center p-12 bg-gray-50">
-        <div className="w-full max-w-2xl bg-white p-8 rounded-lg shadow-md">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold">Your Dashboard</h1>
-            <button
-              onClick={handleLogout}
-              className="py-2 px-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700"
-            >
-              Logout
-            </button>
+      <main className="min-h-screen p-6">
+        <header className="site-header">
+          <div className="page-wrapper" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <a href="/" className="brand">KaamConnect</a>
+            <nav className="site-nav">
+              <a href="/">Home</a>
+              <button onClick={handleLogout} className="btn btn-danger" style={{marginLeft:'8px'}}>Logout</button>
+            </nav>
           </div>
+        </header>
 
-          <div className="mb-6">
-            <h2 className="text-2xl">Welcome, {worker.name}!</h2>
-            <p className="text-gray-600">Your trade: {worker.trade}</p>
-            <p className="text-gray-600">Your phone: {worker.phone}</p>
+        <section className="page-hero">
+          <div className="page-wrapper">
+            <div className="card card-lg w-full max-w-3xl mx-auto">
+              <div className="mb-6">
+                <h1 className="text-3xl font-bold">Your Dashboard</h1>
+              </div>
+
+              <div className="mb-6">
+                <h2 className="text-2xl">Welcome, {worker.name}!</h2>
+                <p className="muted">Your trade: {worker.trade}</p>
+                <p className="muted">Your phone: {worker.phone}</p>
+              </div>
+
+              <div className="card" style={{background:'#f8fafc', textAlign:'center'}}>
+                <h3 className="text-xl font-semibold mb-4">Your HunarScan QR Code</h3>
+                <p className="muted mb-4">Clients can scan this to leave you a review.</p>
+
+                <img
+                  src={worker.qrUrl}
+                  alt="Your QR Code"
+                  className="mx-auto"
+                  width={256}
+                  height={256}
+                />
+
+                <a
+                  href={worker.qrUrl}
+                  download="hunarscan-qr.png"
+                  className="btn btn-primary"
+                  style={{display:'inline-block', marginTop:'1rem'}}
+                >
+                  Download Your QR
+                </a>
+              </div>
+            </div>
           </div>
-
-          <div className="bg-gray-100 p-6 rounded-lg text-center">
-            <h3 className="text-xl font-semibold mb-4">Your HunarScan QR Code</h3>
-            <p className="mb-4">Clients can scan this to leave you a review.</p>
-
-            {/* Display the QR code image from the Data URL */}
-            <img 
-              src={worker.qrUrl} 
-              alt="Your QR Code"
-              className="mx-auto border-4 border-gray-300 rounded-lg"
-              width={256}
-              height={256}
-            />
-
-            <a
-              href={worker.qrUrl} // The Data URL can be used as the download link
-              download="hunarscan-qr.png" // This tells the browser to download it
-              className="mt-6 inline-block py-3 px-6 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700"
-            >
-              Download Your QR
-            </a>
-          </div>
-        </div>
+        </section>
       </main>
     );
   }

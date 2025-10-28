@@ -63,14 +63,17 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+    <div className="card card-lg max-w-md mx-auto">
       <form onSubmit={handleCreateAccount}>
-        <h2 className="text-2xl font-bold mb-6 text-center">Join HunarScan</h2>
-        
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold">Create your worker profile</h2>
+          <p className="muted mt-1">Join KaamConnect to get jobs and collect verified reviews</p>
+        </div>
+
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <div className="form-row">
+          <label htmlFor="email" className="form-label">Email</label>
           <input
             type="email"
             id="email"
@@ -78,12 +81,12 @@ export default function Onboarding() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="e.g., sunil@gmail.com"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+        <div className="form-row">
+          <label htmlFor="password" className="form-label">Password</label>
           <input
             type="password"
             id="password"
@@ -91,14 +94,14 @@ export default function Onboarding() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="At least 6 characters"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
 
         <hr className="my-6" />
 
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Your Name</label>
+        <div className="form-row">
+          <label htmlFor="name" className="form-label">Your Name</label>
           <input
             type="text"
             id="name"
@@ -106,12 +109,12 @@ export default function Onboarding() {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Sunil Kumar"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="trade" className="block text-sm font-medium text-gray-700">Your Trade</label>
+        <div className="form-row">
+          <label htmlFor="trade" className="form-label">Your Trade</label>
           <input
             type="text"
             id="trade"
@@ -119,12 +122,12 @@ export default function Onboarding() {
             onChange={(e) => setTrade(e.target.value)}
             placeholder="e.g., Carpenter, Electrician"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Your Phone Number</label>
+        <div className="form-row">
+          <label htmlFor="phone" className="form-label">Your Phone Number</label>
           <input
             type="tel"
             id="phone"
@@ -132,13 +135,12 @@ export default function Onboarding() {
             onChange={(e) => setPhone(e.target.value)}
             placeholder="e.g., 911234567890"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
 
-        {/* --- THIS IS THE NEW FIELD --- */}
-        <div className="mb-6">
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
+        <div className="form-row">
+          <label htmlFor="location" className="form-label">Location</label>
           <input
             type="text"
             id="location"
@@ -146,15 +148,14 @@ export default function Onboarding() {
             onChange={(e) => setLocation(e.target.value)}
             placeholder="e.g., Delhi, India or 110034"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="form-input"
           />
         </div>
-        {/* --- END NEW FIELD --- */}
         
         <button 
           type="submit" 
           disabled={loading}
-          className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 disabled:bg-gray-400"
+          className="btn btn-primary w-full"
         >
           {loading ? 'Creating Account...' : 'Create Account & Profile'}
         </button>
