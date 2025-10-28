@@ -165,7 +165,7 @@ export default function PublicProfile() {
   return (
     <main className="min-h-screen p-8">
       <header className="site-header">
-        <div className="page-wrapper" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <div className="page-wrapper header-row">
           <a href="/" className="brand">KaamConnect</a>
           <nav className="site-nav">
             <a href="/search">Search</a>
@@ -175,7 +175,7 @@ export default function PublicProfile() {
                 <a href="/client-signup">Client Signup</a>
               </>
             ) : (
-              <span className="text-gray-600">Welcome, {clientUser.email}</span>
+              <span className="muted">Welcome, {clientUser.email}</span>
             )}
           </nav>
         </div>

@@ -76,11 +76,11 @@ export default function Dashboard() {
     return (
       <main className="min-h-screen p-6">
         <header className="site-header">
-          <div className="page-wrapper" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div className="page-wrapper header-row">
             <a href="/" className="brand">KaamConnect</a>
             <nav className="site-nav">
               <a href="/">Home</a>
-              <button onClick={handleLogout} className="btn btn-danger" style={{marginLeft:'8px'}}>Logout</button>
+              <button onClick={handleLogout} className="btn btn-danger ml-2">Logout</button>
             </nav>
           </div>
         </header>
@@ -98,7 +98,7 @@ export default function Dashboard() {
                 <p className="muted">Your phone: {worker.phone}</p>
               </div>
 
-              <div className="card" style={{background:'#f8fafc', textAlign:'center'}}>
+              <div className="card card-muted">
                 <h3 className="text-xl font-semibold mb-4">Your HunarScan QR Code</h3>
                 <p className="muted mb-4">Clients can scan this to leave you a review.</p>
 
@@ -113,8 +113,7 @@ export default function Dashboard() {
                 <a
                   href={worker.qrUrl}
                   download="hunarscan-qr.png"
-                  className="btn btn-primary"
-                  style={{display:'inline-block', marginTop:'1rem'}}
+                  className="btn btn-primary mt-4"
                 >
                   Download Your QR
                 </a>

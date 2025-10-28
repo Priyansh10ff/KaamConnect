@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen">
       <header className="site-header">
-        <div className="page-wrapper" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <div className="page-wrapper header-row">
           <a href="/" className="brand">KaamConnect</a>
           <nav className="site-nav">
             <a href="/signup">Worker Sign up</a>
@@ -16,7 +16,7 @@ export default function LoginPage() {
 
       <section className="page-hero">
         <div className="page-wrapper">
-          <div style={{maxWidth: '700px', margin: '0 auto'}}>
+          <div className="container-max">
             <Login />
           </div>
         </div>

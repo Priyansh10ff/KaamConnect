@@ -5,7 +5,7 @@ export default function ClientSignupPage() {
   return (
     <main className="min-h-screen">
       <header className="site-header">
-        <div className="page-wrapper" style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <div className="page-wrapper header-row">
           <a href="/" className="brand">KaamConnect</a>
           <nav className="site-nav">
             <a href="/client-login">Client Login</a>
@@ -16,7 +16,7 @@ export default function ClientSignupPage() {
 
       <section className="page-hero">
         <div className="page-wrapper">
-          <div style={{maxWidth: '700px', margin: '0 auto'}}>
+          <div className="container-max">
             <ClientSignup />
           </div>
         </div>

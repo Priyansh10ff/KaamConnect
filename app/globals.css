@@ -9,7 +9,7 @@
   --primary: #6d28d9; /* purple-700 */
   --primary-600: #7c3aed;
   --accent: #06b6d4; /* cyan-500 */
-  --muted: #6b7280;
+  --muted: #4b5563; /* darker for better contrast */
   --card-shadow: 0 8px 30px rgba(16,24,40,0.08);
   --glass: rgba(255,255,255,0.6);
 }
@@ -39,6 +39,53 @@ body {
 }
 .site-nav a { color: var(--muted); text-decoration: none; margin-left: 0.75rem; }
 .site-nav a:hover { color: var(--primary-600); }
+
+/* Reusable header row to replace inline styles */
+.header-row { display:flex; justify-content:space-between; align-items:center; }
+
+/* Centered content container with max width */
+.container-max { max-width: 700px; margin: 0 auto; }
+
+/* Small utility margins */
+.ml-2 { margin-left: 0.5rem; }
+.ml-3 { margin-left: 0.75rem; }
+
+/* Improved muted small text for accessibility */
+.muted-small { color: #6b7280; font-size: 0.95rem; }
+
+/* High-contrast text helper */
+.text-contrast { color: #0f172a; }
+
+/* Muted card variant */
+.card-muted { background: var(--bg-1); text-align: center; }
+
+/* Spacing utilities */
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+
+/* Primary text helper */
+.primary-text { color: var(--primary); font-weight: 700; }
+
+/* Full viewport helper for hero sections */
+.full-viewport { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+.absolute-inset { position: absolute; inset: 0; }
+.fixed-full-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; width:100%; height:100%; }
+
+/* Overlay center for hero content */
+.overlay-center { position: relative; z-index: 10; height: 100%; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+.overlay-inner { pointer-events:auto; text-align:center; color: white; }
+.hero-title { font-size: clamp(2rem, 5vw, 3.25rem); margin-bottom: 0.5rem; }
+.hero-sub { margin-bottom: 1.5rem; opacity: 0.95; }
+.cta-row { display:flex; gap:1rem; justify-content:center; }
+
+/* Canvas helper */
+.full-canvas { width:100%; height:100%; display:block; }
+
+/* Button variants for hero */
+.btn-dark { display:inline-block; padding:0.75rem 1.25rem; border-radius:8px; background: rgba(0,0,0,0.6); color: white; text-decoration:none; font-weight:600; }
+.btn-light { display:inline-block; padding:0.75rem 1.25rem; border-radius:8px; background: rgba(255,255,255,0.95); color: #111827; text-decoration:none; font-weight:600; }
 
 /* Page container */
 .page-hero { padding: 3.5rem 1.25rem; display:flex; align-items:center; justify-content:center; }

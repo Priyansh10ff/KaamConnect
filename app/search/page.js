@@ -79,15 +79,15 @@ export default function SearchPage() {
     <main className="min-h-screen p-8">
       <div className="page-wrapper">
 
-        <header className="site-header" style={{padding:0, marginBottom:'1rem'}}>
-          <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+        <header className="site-header">
+          <div className="header-row">
             <div>
               <h1 className="text-3xl font-bold">Find a Worker</h1>
               <p className="muted">You are logged in as: {clientUser?.email}</p>
             </div>
             <div>
               <a href="/" className="muted">Home</a>
-              <button onClick={handleLogout} className="btn btn-danger" style={{marginLeft:'10px'}}>Logout</button>
+              <button onClick={handleLogout} className="btn btn-danger ml-3">Logout</button>
             </div>
           </div>
         </header>
@@ -132,7 +132,7 @@ export default function SearchPage() {
               <p className="muted mb-4">{worker.location}</p>
 
               <div className="mb-4">
-                <span className="text-xl font-bold" style={{color:'var(--primary)'}}>
+                <span className="text-xl font-bold primary-text">
                   {(worker.trustScore || 0).toFixed(1)}
                 </span>
                 <span className="muted"> Trust Score</span>
@@ -143,7 +143,6 @@ export default function SearchPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
-                style={{display:'inline-block'}}
               >
                 View Profile & Reviews
               </a>
