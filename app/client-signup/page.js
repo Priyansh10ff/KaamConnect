@@ -4,7 +4,7 @@ import ClientSignup from '../../components/ClientSignup';
 export default function ClientSignupPage() {
   return (
     <main className="min-h-screen">
-      <header className="site-header">
+  <header className="site-header site-header--dark">
         <div className="page-wrapper header-row">
           <a href="/" className="brand">KaamConnect</a>
           <nav className="site-nav">

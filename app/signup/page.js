@@ -4,7 +4,7 @@ import Onboarding from '../../components/Onboarding'; // Import the component
 export default function SignupPage() {
   return (
     <main className="min-h-screen">
-      <header className="site-header">
+  <header className="site-header site-header--dark">
         <div className="page-wrapper header-row">
           <a href="/" className="brand">KaamConnect</a>
           <nav className="site-nav">
