@@ -1,5 +1,5 @@
 // app/api/worker/create/route.js
-import { db, authAdmin } from '../../../../lib/firebaseAdmin'; 
+import { db, auth } from '../../../../lib/firebaseAdmin'; 
 import qrcode from 'qrcode';
 import { NextResponse } from 'next/server';
 

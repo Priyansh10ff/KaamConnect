@@ -1,5 +1,5 @@
 // app/api/client/create/route.js
-import { db, authAdmin } from '../../../../lib/firebaseAdmin';
+import { db, auth } from '../../../../lib/firebaseAdmin';
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
